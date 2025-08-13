@@ -23,3 +23,11 @@ body {
    font-family: 'Poppins', Arial, Helvetica, sans-serif;
    color:"#273B49"
 }
+
+.auth-form .ant-input {
+  background: none !important;
+}
+
+:where(.ant-input) {
+  background: none !important;
+}

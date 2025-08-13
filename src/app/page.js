@@ -1,32 +1,46 @@
 'use client';
 import React, { useState } from 'react';
-import { Form } from 'antd';
+import { Button, Form, Input } from 'antd';
 import {
-  IconAlertTriangleFilled,
-  IconBrandGithubFilled
+  IconBrandGithubFilled,
+  IconLock,
+  IconMail,
+  IconUser
 } from '@tabler/icons-react';
 import { renderError } from '@/utils/common.js';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+
 function page() {
   const [tab, setTab] = useState('signIn');
+  const router = useRouter();
 
   const handleSwitchTab = (tab) => {
     setTab(tab);
   };
+  const onFinish = async (values) => {
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_DEV_APIS_URI}/api/v1/auth/login`,
+        {
+          ...values
+        }
+      );
+
+      router.push('/projects');
+    } catch (error) {
+      console.log('error:', error);
+    }
+  };
+
   return (
     <>
-      <div className='flex w-[100%]'>
+      <div className='flex w-[100%] auth-form'>
         <div
           className='w-[40%] h-screen'
           style={{
-            background: `
-    radial-gradient(circle at 60% 10%, #90dffe 25%, transparent 60%),
-    radial-gradient(circle at 20% 80%, #b7ffea 20%, transparent 60%),
-    radial-gradient(circle at 80% 30%, #a0c4ff 30%, transparent 70%),
-    radial-gradient(circle at 70% 80%, #faaca8 15%, transparent 60%),
-    linear-gradient(120deg, #fdcbf1 0%, #a0c4ff 100%)
-  `,
-            backgroundBlendMode: 'lighten',
-            filter: 'blur(0.5px)'
+            background:
+              'linear-gradient(to bottom right, #fbe3a8, #d8d8b8, #d3eaf2, #92d7f7, #c8e6f3)'
           }}
         >
           left
@@ -91,9 +105,10 @@ function page() {
             {/* form section */}
             <div className='w-full mt-4'>
               {tab === 'signIn' ? (
-                <Form layout='vertical' className='w-full'>
+                <Form layout='vertical' className='w-full' onFinish={onFinish}>
                   <Form.Item
                     name='email'
+                    className='!mb-2'
                     rules={[
                       {
                         required: true,
@@ -101,15 +116,17 @@ function page() {
                       }
                     ]}
                   >
-                    <input
+                    <Input
+                      prefix={<IconMail size={18} className='text-gray-400' />}
                       type='email'
-                      placeholder='Enter your email'
-                      className='w-full border rounded-lg px-3 py-2 text-sm outline-none bg-[#F3F5F7] border-none font-semibold'
+                      placeholder='Email'
+                      className='!bg-[#F3F5F7] !border-none !font-semibold !px-3 !py-2 focus:!border-[#4bd657]'
                     />
                   </Form.Item>
 
                   <Form.Item
                     name='password'
+                    className='!mb-3'
                     rules={[
                       {
                         required: true,
@@ -117,60 +134,113 @@ function page() {
                       }
                     ]}
                   >
-                    <input
-                      type='password'
-                      placeholder='Enter your password'
-                      className='w-full border rounded-lg px-3 py-2 text-sm outline-none bg-[#F3F5F7] border-none font-semibold'
+                    <Input.Password
+                      prefix={<IconLock size={18} className='text-gray-400' />}
+                      placeholder='Password'
+                      className='!bg-[#F3F5F7] !border-none !font-semibold !px-3 !py-2 focus:!border-[#4bd657]'
                     />
                   </Form.Item>
 
-                  <button
-                    type='submit'
-                    className='bg-[#01B763] text-white w-full rounded-lg py-2 mt-2'
+                  <Button
+                    type='primary'
+                    htmlType='submit'
+                    className='!bg-[#01B763] !text-white w-full !font-semibold !rounded-lg !py-5 mt-2 cursor-pointer focus:green-500'
                   >
-                    Sign in
-                  </button>
+                    Sign In
+                  </Button>
                 </Form>
               ) : (
-                <Form layout='vertical' className='w-full'>
-                  <Form.Item name='First Name' rules={[{ required: true }]}>
-                    <input
-                      type='text'
-                      placeholder='Enter your first name'
-                      className='w-full border rounded-lg px-3 py-2 text-sm outline-none bg-[#F3F5F7] border-none font-semibold'
-                    />
-                  </Form.Item>
-
-                  <Form.Item name='Last Name' rules={[{ required: true }]}>
-                    <input
-                      type='text'
-                      placeholder='Enter your last name'
-                      className='w-full border rounded-lg px-3 py-2 text-sm outline-none bg-[#F3F5F7] border-none font-semibold'
-                    />
-                  </Form.Item>
-
-                  <Form.Item name='Email' rules={[{ required: true }]}>
-                    <input
-                      type='email'
-                      placeholder='Enter your email'
-                      className='w-full border rounded-lg px-3 py-2 text-sm outline-none bg-[#F3F5F7] border-none font-semibold'
-                    />
-                  </Form.Item>
-
-                  <Form.Item name='password' rules={[{ required: true }]}>
-                    <input
-                      type='Password'
-                      placeholder='Enter password'
-                      className='w-full border rounded-lg px-3 py-2 text-sm outline-none bg-[#F3F5F7] border-none font-semibold'
-                    />
-                  </Form.Item>
-
-                  <button
-                    type='submit'
-                    className='bg-[#01B763] text-white w-full rounded-lg py-2 mt-2'
+                <Form layout='vertical' className='w-full' onFinish={onFinish}>
+                  <Form.Item
+                    name='First Name'
+                    className='!mb-3'
+                    rules={[
+                      {
+                        required: true,
+                        message: renderError('Please Enter First name')
+                      }
+                    ]}
                   >
-                    Create account
-                  </button>
+                    <div className='relative w-full'>
+                      <IconUser
+                        size={18}
+                        className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400'
+                      />
+                      <input
+                        type='text'
+                        placeholder='Enter your First name'
+                        className='w-full border rounded-lg px-3 py-2 pl-10 text-sm outline-none bg-[#F3F5F7] border-none font-semibold'
+                      />
+                    </div>
+                  </Form.Item>
+
+                  <Form.Item name='Last Name' className='!mb-3' rules={[]}>
+                    <div className='relative w-full'>
+                      <IconUser
+                        size={18}
+                        className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400'
+                      />
+                      <input
+                        type='text'
+                        placeholder='Enter your last name'
+                        className='w-full border rounded-lg px-3 py-2 pl-10 text-sm outline-none bg-[#F3F5F7] border-none font-semibold'
+                      />
+                    </div>
+                  </Form.Item>
+
+                  <Form.Item
+                    name='email'
+                    className='!mb-3'
+                    rules={[
+                      {
+                        required: true,
+                        message: renderError('Please Enter email')
+                      }
+                    ]}
+                  >
+                    <div className='relative w-full'>
+                      <IconMail
+                        size={18}
+                        className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400'
+                      />
+                      <input
+                        type='email'
+                        placeholder='Email'
+                        className='w-full border rounded-lg px-3 py-2 pl-10 text-sm outline-none bg-[#F3F5F7] border-none font-semibold'
+                      />
+                    </div>
+                  </Form.Item>
+
+                  <Form.Item
+                    name='password'
+                    className='!mb-3'
+                    rules={[
+                      {
+                        required: true,
+                        message: renderError('Please Enter password')
+                      }
+                    ]}
+                  >
+                    <div className='relative w-full'>
+                      <IconLock
+                        size={18}
+                        className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400'
+                      />
+                      <input
+                        type='password'
+                        placeholder='Password'
+                        className='w-full border rounded-lg px-3 py-2 pl-10 text-sm outline-none bg-[#F3F5F7] border-none font-semibold'
+                      />
+                    </div>
+                  </Form.Item>
+
+                  <Button
+                    type='primary'
+                    htmlType='submit'
+                    className='!bg-[#01B763] !text-white w-full !font-semibold !rounded-lg !py-5 mt-2 cursor-pointer focus:green-500'
+                  >
+                    Create Account
+                  </Button>
                 </Form>
               )}
             </div>
