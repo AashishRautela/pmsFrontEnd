@@ -31,3 +31,44 @@ body {
 :where(.ant-input) {
   background: none !important;
 }
+
+/* buttons */
+.ant-btn-variant-outlined{
+  background: none !important;
+}
+
+
+/* modal styling */
+
+.modal_styling .ant-modal-content {
+  padding: 0px !important;
+}
+
+.modal_styling .ant-modal-close {
+  top: 8px !important;
+}
+
+.modal_styling .ant-modal-header {
+  /* background: #01B763 !important; */
+  padding: 12px 20px 12px 20px !important;
+  border-bottom: 1px solid rgba(211, 211, 211, 0.445) !important;
+}
+
+.modal_styling .ant-modal-title,
+.modal_styling .ant-modal-close {
+  color: white !important;
+}
+
+.ant-modal .ant-modal-body{
+  padding: 12px 20px 12px 20px !important;
+}
+
+.ant-modal .ant-modal-footer{
+  padding: 12px 20px 12px 20px !important;
+}
+
+.custom-menu .ant-menu-item-selected {
+  background-color: #01B763 !important;
+  color: #ffffff !important;
+}
+

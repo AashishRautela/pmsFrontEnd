@@ -10,7 +10,7 @@ import {
 import { renderError } from '@/utils/common.js';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-
+import toast from 'react-hot-toast';
 function page() {
   const [tab, setTab] = useState('signIn');
   const router = useRouter();
@@ -18,18 +18,26 @@ function page() {
   const handleSwitchTab = (tab) => {
     setTab(tab);
   };
+
   const onFinish = async (values) => {
     try {
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_DEV_APIS_URI}/api/v1/auth/login`,
+        values,
         {
-          ...values
+          withCredentials: true
         }
       );
 
-      router.push('/projects');
+      toast.success('Login successful 🎉');
+      router.push('/home');
     } catch (error) {
-      console.log('error:', error);
+      console.error('error:', error);
+
+      toast.error(
+        error.response?.data?.message ||
+          'Something went wrong, please try again.'
+      );
     }
   };
 
