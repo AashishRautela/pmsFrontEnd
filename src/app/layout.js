@@ -52,6 +52,13 @@ export default function RootLayout({ children }) {
                 },
                 Slider: {
                   defaultBg: '#01B763'
+                },
+                DatePicker: {
+                  defaultBg: '#fff',
+
+                  colorBgContainer: '#fff',
+                  activeBg: '#fff',
+                  hoverBg: '#fff'
                 }
               }
             }}

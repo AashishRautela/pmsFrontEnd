@@ -1,10 +1,13 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Menu } from 'antd';
 import { sideBarItems } from '@/constants/sidebar';
 
 export default function SideBar() {
+  const [seletectKey, setSelectedKey] = useState('');
+  console.log('seletectKey-->', seletectKey);
+
   const siderStyle = {
     overflow: 'auto',
     height: 'calc(100vh - 60px)',
@@ -20,6 +23,20 @@ export default function SideBar() {
     boxShadow: '6px 0 4px -7px #999, -6px 0 4px -4px'
   };
 
+  useEffect(() => {
+    const key = localStorage.getItem('seletedKey');
+    if (key) {
+      setSelectedKey(key);
+    } else {
+      setSelectedKey('dashboard');
+    }
+  }, []);
+
+  const onSelect = (item) => {
+    console.log('item-->', item.key);
+    localStorage.setItem('seletedKey', item.key);
+  };
+
   return (
     <div className='pt-14'>
       <Menu
@@ -27,8 +44,9 @@ export default function SideBar() {
         mode='inline'
         items={sideBarItems}
         style={siderStyle}
-        defaultSelectedKeys={['dashboard']}
+        defaultSelectedKeys={[seletectKey]}
         className='custom-menu'
+        onSelect={onSelect}
       />
     </div>
   );
