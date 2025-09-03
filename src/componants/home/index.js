@@ -2,17 +2,26 @@
 import { Button, Modal, Form, Input, DatePicker } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { IconPlus } from '@tabler/icons-react';
-import { renderError } from '@/utils/common';
+import { handleErrorResponse, renderError } from '@/utils/common';
 import dayjs from 'dayjs';
 import axios from 'axios';
+import toast from 'react-hot-toast';
+import { ProjectSelector } from './selector';
+import { useDispatch, useSelector } from 'react-redux';
+import { getProjects } from '@/store/slices/home';
 
 function Index() {
   const [form] = Form.useForm();
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [submittable, setSubmittable] = useState(false);
+  const [projectList, setProjectList] = useState([]);
+  const dispatch = useDispatch();
 
-  // watch all fields
+  // store
+  const { loading, projects } = useSelector(ProjectSelector);
+
+  // form related
   const values = Form.useWatch([], form);
 
   useEffect(() => {
@@ -51,16 +60,25 @@ function Index() {
       });
 
       console.log('✅ API Response:', response.data);
+      toast.success(response.data.message);
 
-      // Success actions
       setOpen(false);
       form.resetFields();
     } catch (error) {
       console.error('❌ API Error:', error.response?.data || error.message);
+      toast.error(error.response.data.message || error.message);
     } finally {
       setConfirmLoading(false);
     }
   };
+
+  useEffect(() => {
+    dispatch(getProjects());
+  }, []);
+
+  useEffect(() => {
+    setProjectList(projects);
+  }, [projects]);
 
   return (
     <>

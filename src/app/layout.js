@@ -4,6 +4,7 @@ import '@ant-design/v5-patch-for-react-19';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { Toaster } from 'react-hot-toast';
 import { ConfigProvider } from 'antd';
+import ReduxProvider from '@/store/reduxProvider';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -55,7 +56,6 @@ export default function RootLayout({ children }) {
                 },
                 DatePicker: {
                   defaultBg: '#fff',
-
                   colorBgContainer: '#fff',
                   activeBg: '#fff',
                   hoverBg: '#fff'
@@ -63,9 +63,16 @@ export default function RootLayout({ children }) {
               }
             }}
           >
-            {children}
+            <ReduxProvider>{children}</ReduxProvider>
           </ConfigProvider>
         </AntdRegistry>
+
+        <Toaster
+          position='top-right'
+          toastOptions={{
+            duration: 4000
+          }}
+        />
       </body>
     </html>
   );
