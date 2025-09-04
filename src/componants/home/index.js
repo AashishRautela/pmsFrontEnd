@@ -2,7 +2,11 @@
 import { Button, Modal, Form, Input, DatePicker, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { IconPlus, IconSearch } from '@tabler/icons-react';
-import { handleErrorResponse, renderError } from '@/utils/common';
+import {
+  handleErrorResponse,
+  renderError,
+  renderUserWithIcon
+} from '@/utils/common';
 import dayjs from 'dayjs';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -30,6 +34,7 @@ function Index() {
 
   // store
   const { loading, projects } = useSelector(ProjectSelector);
+  console.log('projects--->', projects);
 
   // form related
   const values = Form.useWatch([], form);
@@ -325,8 +330,86 @@ function Index() {
           />
         </div>
       </div>
+      {/* project section */}
+      <div className='mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6'>
+        {projects.map((proj) => (
+          <div
+            key={proj.key}
+            className='border border-gray-200 rounded-xl p-4 shadow-sm bg-white hover:shadow-md transition cursor-pointer'
+          >
+            {/* Header */}
+            <div className='flex justify-between items-center mb-3'>
+              <div className='flex items-center gap-2'>
+                <div className='rounded-lg bg-[#45B6DA] px-2'>
+                  <span className='text-[14px] text-gray-900 uppercase text-white'>
+                    {proj.key}
+                  </span>
+                </div>
+                <div>
+                  <span className='text-[15px] font-semibold text-gray-600 capitalize'>
+                    {proj.name}
+                  </span>
+                </div>
+              </div>
 
-      <div>this is where i will show projects</div>
+              <div
+                className={`rounded-lg text-xs px-2 py-1 ${
+                  proj.status === 'active'
+                    ? 'bg-green-100 text-green-600'
+                    : 'bg-gray-100 text-gray-600'
+                }`}
+              >
+                <span className='text-[10px] uppercase'>{proj.status}</span>
+              </div>
+            </div>
+
+            {/* Dates */}
+            <div className='mt-3'>
+              <h4
+                className={`text-xs font-semibold uppercase tracking-wide text-gray-400`}
+              >
+                Timeline
+              </h4>
+
+              {proj.startDate ? (
+                <div className='mt-1 space-y-1'>
+                  <p className='text-sm text-gray-700'>
+                    <span className='font-medium '>Start Date:</span>{' '}
+                    <span className='text-gray-400 font-medium'>
+                      {dayjs(proj.startDate).format('DD MMM YYYY')}
+                    </span>
+                  </p>
+                  <p className='text-sm text-gray-700'>
+                    <span className='font-medium'>End Date:</span>{' '}
+                    <span className='text-gray-400 font-medium'>
+                      {proj.endDate
+                        ? dayjs(proj.endDate).format('DD MMM YYYY')
+                        : '—'}
+                    </span>
+                  </p>
+                </div>
+              ) : (
+                <div className='mt-1 space-y-1'>
+                  <p className='text-sm text-gray-700'>
+                    <span className='font-medium '>Start Date:</span>{' '}
+                    <span className='text-gray-400 font-medium'>---</span>
+                  </p>
+                  <p className='text-sm text-gray-700'>
+                    <span className='font-medium'>End Date:</span>{' '}
+                    <span className='text-gray-400 font-medium'>---</span>
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Manager + Team */}
+            <div className='flex items-center justify-between mt-4'>
+              {renderUserWithIcon(proj.manager)}
+              <span className='text-sm text-gray-600'>👥 {proj.teamSize}</span>
+            </div>
+          </div>
+        ))}
+      </div>
     </>
   );
 }
