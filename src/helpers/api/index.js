@@ -5,7 +5,6 @@ const getUrlByKey = (key) => apiKeys[key];
 
 class API {
   static async apiGet(key, args) {
-    debugger;
     const controller = new AbortController();
     const url =
       typeof args === 'string' ? getUrlByKey(key) + args : getUrlByKey(key);

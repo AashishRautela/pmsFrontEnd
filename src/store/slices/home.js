@@ -7,7 +7,7 @@ export const getProjects = createAsyncThunk(
   async (payload, thunkAPI) => {
     try {
       const response = await API.apiGet('projects', payload);
-      return response.data; // return only the data
+      return response.data;
     } catch (error) {
       console.error('❌ Error fetching projects:', error);
       return thunkAPI.rejectWithValue(

@@ -59,6 +59,14 @@ export default function RootLayout({ children }) {
                   colorBgContainer: '#fff',
                   activeBg: '#fff',
                   hoverBg: '#fff'
+                },
+                Input: {
+                  defaultBg: '#fff',
+                  colorBgContainer: '#fff'
+                },
+                Select: {
+                  defaultBg: '#fff',
+                  colorBgContainer: '#fff'
                 }
               }
             }}

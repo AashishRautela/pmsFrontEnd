@@ -1,7 +1,7 @@
 'use client';
-import { Button, Modal, Form, Input, DatePicker } from 'antd';
+import { Button, Modal, Form, Input, DatePicker, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { IconPlus } from '@tabler/icons-react';
+import { IconPlus, IconSearch } from '@tabler/icons-react';
 import { handleErrorResponse, renderError } from '@/utils/common';
 import dayjs from 'dayjs';
 import axios from 'axios';
@@ -16,6 +16,16 @@ function Index() {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [submittable, setSubmittable] = useState(false);
   const [projectList, setProjectList] = useState([]);
+  const [filters, setFilters] = useState({
+    search: '',
+    status: null,
+    role: null,
+    sort: '',
+    page: 1,
+    limit: 10
+  });
+  console.log('filters-->', filters);
+
   const dispatch = useDispatch();
 
   // store
@@ -53,7 +63,6 @@ function Index() {
     };
 
     try {
-      debugger;
       const backend = process.env.NEXT_PUBLIC_DEV_APIS_URI;
       const response = await axios.post(`${backend}/api/v1/project`, payload, {
         withCredentials: true
@@ -79,6 +88,13 @@ function Index() {
   useEffect(() => {
     setProjectList(projects);
   }, [projects]);
+
+  const handleFilter = (field, e) => {
+    setFilters((prev) => ({
+      ...prev,
+      [field]: field == 'search' ? e.target.value : e
+    }));
+  };
 
   return (
     <>
@@ -247,6 +263,67 @@ function Index() {
           <IconPlus size={16} />
           Create Project
         </Button>
+      </div>
+
+      {/* filter bar */}
+
+      <div className='flex gap-4'>
+        <div className='w-64'>
+          <Input
+            prefix={<IconSearch size={18} className='text-gray-400' />}
+            placeholder='Search Project'
+            value={filters.search}
+            onChange={(e) => handleFilter('search', e)}
+          />
+        </div>
+
+        <div className='w-48'>
+          <Select
+            placeholder='Select Status'
+            mode='multiple'
+            value={filters.status}
+            onChange={(value) => handleFilter('status', value)}
+            className='w-full'
+            options={[
+              {
+                value: 'jack',
+                label: 'Jack'
+              },
+              {
+                value: 'lucy',
+                label: 'Lucy'
+              },
+              {
+                value: 'tom',
+                label: 'Tom'
+              }
+            ]}
+          />
+        </div>
+
+        <div className='w-48'>
+          <Select
+            placeholder='Role'
+            mode='multiple'
+            value={filters.role}
+            onChange={(value) => handleFilter('role', value)}
+            className='w-full'
+            options={[
+              {
+                value: 'admin',
+                label: 'Admin'
+              },
+              {
+                value: 'member',
+                label: 'Member'
+              },
+              {
+                value: 'manager',
+                label: 'Manger'
+              }
+            ]}
+          />
+        </div>
       </div>
 
       <div>this is where i will show projects</div>
